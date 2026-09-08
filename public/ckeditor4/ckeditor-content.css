@@ -1,0 +1,37 @@
+body {
+  background: #ffffff;
+  color: #171717;
+  font-family: Arial, sans-serif;
+}
+
+a {
+  color: #2563eb;
+}
+
+table {
+  border-color: #d4d4d4;
+}
+
+td,
+th {
+  border-color: #d4d4d4;
+}
+
+/* Dark mode */
+body.dark {
+  background: #18181b;
+  color: #e4e4e7;
+}
+
+body.dark a {
+  color: #60a5fa;
+}
+
+body.dark table {
+  border-color: #52525b;
+}
+
+body.dark td,
+body.dark th {
+  border-color: #52525b;
+}

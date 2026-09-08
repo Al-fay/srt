@@ -1,0 +1,2 @@
+install shadcn pakai
+npx shadcn@2.3.0

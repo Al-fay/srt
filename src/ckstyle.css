@@ -1,0 +1,297 @@
+.ck {
+  --ck-border-radius: var(--radius);
+
+  --ck-color-base-background: var(--background);
+  --ck-color-base-text: var(--foreground);
+  --ck-color-text: var(--foreground);
+
+  --ck-color-base-border: var(--border);
+  --ck-color-focus-border: var(--ring);
+
+  --ck-color-toolbar-background: var(--card);
+  --ck-color-toolbar-border: var(--border);
+
+  --ck-color-panel-background: var(--popover);
+  --ck-color-panel-border: var(--border);
+
+  --ck-color-dropdown-panel-background: var(--popover);
+  --ck-color-dropdown-panel-text: var(--popover-foreground);
+
+  --ck-color-list-background: var(--popover);
+  --ck-color-list-text: var(--popover-foreground);
+
+  --ck-color-input-background: var(--background);
+  --ck-color-input-text: var(--foreground);
+  --ck-color-input-border: var(--border);
+
+  --ck-color-button-default-background: transparent;
+  --ck-color-button-default-hover-background: var(--accent);
+  --ck-color-button-default-active-background: var(--accent);
+
+  --ck-color-button-on-background: var(--accent);
+  --ck-color-button-on-color: var(--accent-foreground);
+  --ck-color-button-on-hover-background: var(--accent);
+
+  --ck-color-base-active: var(--accent);
+  --ck-color-base-focus: var(--ring);
+}
+
+.ck-tooltip .ck-tooltip__text {
+  background: var(--popover) !important;
+  color: var(--popover-foreground) !important;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 2px);
+  box-shadow: var(--shadow-md);
+}
+
+.ck-tooltip .ck-tooltip__text::after {
+  border-top-color: var(--popover) !important;
+}
+
+.ck.ck-editor {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    box-shadow .2s ease,
+    border-color .2s ease;
+}
+
+.ck.ck-editor:has(.ck-focused) {
+  border-color: var(--ring);
+  box-shadow:
+    var(--shadow-md),
+    0 0 0 3px color-mix(in srgb, var(--ring) 25%, transparent);
+}
+
+.ck.ck-editor .ck-editor__main > .ck-editor__editable.ck-focused {
+  outline: none;
+}
+
+.ck.ck-editor:focus-within {
+  border-color: var(--ring);
+  box-shadow:
+    var(--shadow-md),
+    0 0 0 3px color-mix(in srgb, var(--ring) 25%, transparent);
+}
+
+.ck-editor__main > .ck-editor__editable {
+  min-height: 200px;
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+  border: none !important;
+  box-shadow: 10px !important;
+}
+
+.ck-focused .ck-editor__main > .ck-editor__editable {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+
+.ck-toolbar {
+  background: var(--card) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.ck-toolbar__separator {
+  background: var(--border) !important;
+}
+
+.ck-button {
+  color: var(--foreground) !important;
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.ck-button:hover:not(.ck-disabled) {
+  background: var(--accent) !important;
+  color: var(--accent-foreground) !important;
+}
+
+.ck-button.ck-on {
+  background: var(--accent) !important;
+  color: var(--accent-foreground) !important;
+}
+
+.ck-button.ck-on:hover {
+  background: var(--accent) !important;
+}
+
+.ck-dropdown__panel {
+  background: var(--popover) !important;
+  color: var(--popover-foreground) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.ck-list {
+  background: var(--popover) !important;
+}
+
+.ck-list__item {
+  color: var(--popover-foreground);
+}
+
+.ck-list__item:hover {
+  background: var(--accent) !important;
+}
+
+.ck-list__item.ck-on {
+  background: var(--accent) !important;
+  color: var(--accent-foreground);
+}
+
+.ck-input {
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.ck-input:focus {
+  border-color: var(--ring) !important;
+  box-shadow: none !important;
+}
+
+.ck-balloon-panel {
+  background: var(--popover) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.ck-balloon-panel * {
+  color: var(--popover-foreground);
+}
+
+.ck-content table {
+  border-collapse: collapse;
+}
+
+.ck-content table td,
+.ck-content table th {
+  border: 1px solid var(--border);
+}
+
+.ck-content table th {
+  background: var(--muted);
+}
+
+.ck-content figure.image img {
+  border-radius: var(--radius);
+}
+
+.ck-content blockquote {
+  border-left: 4px solid var(--border);
+  margin: 1rem 0;
+  padding-left: 1rem;
+  color: var(--muted-foreground);
+}
+
+.ck-content code {
+  background: var(--muted);
+  color: var(--foreground);
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.ck-content pre {
+  background: var(--muted);
+  color: var(--foreground);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.ck-content .ck-horizontal-line hr {
+  border: none !important;
+  border-top: 2px solid var(--border) !important;
+  background: transparent !important;
+}
+
+.ck-content h1 {
+  font-size: 2em;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.ck-content h2 {
+  font-size: 1.5em;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.ck-content h3 {
+  font-size: 1.17em;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.ck-content p {
+  margin: 0.75rem 0;
+}
+
+.ck-content ol,
+.ck-content ul {
+  padding-left: 2rem;
+}
+
+.ck-content li {
+  list-style: inherit;
+}
+
+.ck-content a {
+  color: rgb(59 130 246);
+  text-decoration: underline;
+}
+
+.dark .ck-content a {
+  color: rgb(96 165 250);
+}
+
+.ck.ck-editor__editable > .ck-placeholder::before {
+  color: var(--muted-foreground);
+}
+
+.ck-content ::selection {
+  background: color-mix(in srgb, var(--ring) 35%, transparent);
+}
+
+.ck.ck-editor__editable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ck.ck-editor__editable::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+
+.ck.ck-editor__editable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ck *,
+.ck {
+  transition:
+    background-color .15s ease,
+    color .15s ease,
+    border-color .15s ease;
+}
+
+.surat-content figure.table {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.surat-content figure.table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.surat-content figure.table td,
+.surat-content figure.table th {
+  border: 1px solid var(--border);
+  padding: 8px;
+}
+
+.surat-content figure.table th {
+  background: var(--muted);
+}
