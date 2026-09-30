@@ -1,22 +1,21 @@
-export interface TanggalLibur {
-  tglLibur: Date
-  keterangan: string
-}
+import type { TandaTangan } from "./surat";
 
-export interface TandaTangan {
-  nip: string
-  jabatan: string
+export interface TanggalLibur {
+  tglLibur: Date;
+  keterangan: string;
 }
 
 export interface PengumumanLiburFormData {
-  tanggal: Date
-  nomor: string
-  bagian: string
-  kode: string
-  bulan: string
-  tglLibur: TanggalLibur[]
-  buka: Date
-  ttd: TandaTangan[]
+  xNo_thn: Date;
+  nomor: string;
+  xNo_bag: string;
+  xNo_kode: string;
+  xNo_bln: string;
+  tglLibur: TanggalLibur[];
+  buka: Date;
+  ttd: TandaTangan[];
+  klasifikasi: string;
+  xTg_share?: Date;
 }
 
-export type PengumumanLiburMode = "create" | "edit"
+export type PengumumanLiburMode = "create" | "edit";

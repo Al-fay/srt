@@ -1,95 +1,42 @@
-import type { ComboboxOption } from "@/components/form/combobox-field"
-import { api } from "@/lib/api"
-import { API_URL } from "@/lib/env"
-import type ApiResponse from "@/types/api"
+import type { ComboboxOption } from "@/components/form/combobox-field";
+import { api } from "@/lib/api";
+import type ApiResponse from "@/types/api";
 
 export interface DisplayUserKantor {
-  xwil_code: string
-  xaktiv: string
+  xwil_code: string;
+  xaktiv: string;
 }
 
 export interface DisplayUserGrup {
-  xgrup: string
+  xgrup: string;
 }
 
 export async function displayUserService(value: DisplayUserKantor) {
-  const response = await fetch(`${API_URL}/auth/dfuser`, {
+  return api<Blob>(`/auth/dfuser`, {
     method: "POST",
+    body: JSON.stringify(value),
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include",
-    body: JSON.stringify(value),
-  })
-
-  const contentType = response.headers.get("content-type") ?? ""
-
-  if (!response.ok) {
-    let body: any = null
-
-    if (contentType.includes("application/json")) {
-      body = await response.json()
-    } else {
-      body = await response.text()
-    }
-
-    const error = new Error(
-      body?.error?.message ?? body?.message ?? "Terjadi kesalahan"
-    ) as Error & {
-      code?: string
-      response?: ApiResponse<never>
-    }
-
-    error.code = body?.error?.code
-    error.response = body
-
-    throw error
-  }
-
-  return response.blob()
+    responseType: "blob",
+  });
 }
 
 export async function displayUserGrupService(value: DisplayUserGrup) {
-  const response = await fetch(`${API_URL}/auth/dfgrup`, {
+  return api<Blob>(`/auth/dfgrup`, {
     method: "POST",
+    body: JSON.stringify(value),
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include",
-    body: JSON.stringify(value),
-  })
-
-  const contentType = response.headers.get("content-type") ?? ""
-
-  if (!response.ok) {
-    let body: any = null
-
-    if (contentType.includes("application/json")) {
-      body = await response.json()
-    } else {
-      body = await response.text()
-    }
-
-    const error = new Error(
-      body?.error?.message ?? body?.message ?? "Terjadi kesalahan"
-    ) as Error & {
-      code?: string
-      response?: ApiResponse<never>
-    }
-
-    error.code = body?.error?.code
-    error.response = body
-
-    throw error
-  }
-
-  return response.blob()
+    responseType: "blob",
+  });
 }
 
 export async function getJenisPenerima() {
   const response = await api<ApiResponse<ComboboxOption[]>>(
-    "/surat/jenispenerima?xPil=2"
-  )
+    "/surat/jenispenerima?xPil=2",
+  );
 
-  return response.data
+  return response.data;
 }

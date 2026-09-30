@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/data-table";
+import { DataTable, type DataTableQueryParams } from "@/components/data-table";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,7 +37,7 @@ import {
   UserCheck,
   UserRoundX,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/user/")({
@@ -256,6 +256,32 @@ function RouteComponent() {
     [],
   );
 
+  const fetchDataUser = useCallback(
+    async ({
+      page,
+      limit,
+      search,
+      sortBy,
+      sortOrder,
+      filters,
+    }: DataTableQueryParams) => {
+      const res = await getUsers({
+        page,
+        limit,
+        search,
+        sortBy,
+        sortOrder,
+        filters,
+      });
+
+      return {
+        data: res.data,
+        total: res.total,
+      };
+    },
+    [],
+  );
+
   return (
     <>
       <div className="flex items-center justify-between gap-5">
@@ -273,24 +299,7 @@ function RouteComponent() {
         <DataTable
           columns={columns}
           refreshTrigger={refreshKey}
-          fetcher={async ({
-            page,
-            limit,
-            search,
-            sortBy,
-            sortOrder,
-            filters,
-          }) => {
-            const res = await getUsers({
-              page,
-              limit,
-              search,
-              sortBy,
-              sortOrder,
-              filters,
-            });
-            return { data: res.data, total: res.total };
-          }}
+          fetcher={fetchDataUser}
           features={{
             search: true,
             pagination: true,

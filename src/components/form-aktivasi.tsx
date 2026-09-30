@@ -182,6 +182,7 @@ export default function FormAktivasi({ initialData, onSubmit, open }: Props) {
                   options={[]}
                   queryKey={["bagian-options"]}
                   queryFn={getDtBagianOptions}
+                  mapData={(data) => data}
                   placeholder="Cari bagian..."
                 />
               )}

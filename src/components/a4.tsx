@@ -14,9 +14,9 @@ export function A4Page({ children, footer }: A4PageProps) {
         mx-auto
         mb-8
         flex
-        h-[297mm]
-        min-h-[297mm]
-        w-[210mm]
+        h-[11in]
+        min-h-[11in]
+        w-[8.5in]
         flex-col
         overflow-hidden
         bg-white

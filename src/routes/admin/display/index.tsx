@@ -1,81 +1,81 @@
-import { ComboboxField } from "@/components/form/combobox-field"
-import { Button } from "@/components/ui/button"
+import { ComboboxField } from "@/components/form/combobox-field";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { usePageTitle } from "@/lib/use-page-title"
+} from "@/components/ui/card";
+import { usePageTitle } from "@/lib/use-page-title";
 import {
   displayUserGrupService,
   displayUserService,
   getJenisPenerima,
-} from "@/services/display.service"
+} from "@/services/display.service";
 import {
   getStsUserOptions,
   getWilCodeOptions,
-} from "@/services/options.service"
-import { useForm } from "@tanstack/react-form"
-import { createFileRoute } from "@tanstack/react-router"
-import { Loader } from "lucide-react"
-import { useState } from "react"
-import { toast } from "sonner"
+} from "@/services/options.service";
+import { useForm } from "@tanstack/react-form";
+import { createFileRoute } from "@tanstack/react-router";
+import { Loader } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/display/")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
-  usePageTitle("Display User")
+  usePageTitle("Display User");
   const form = useForm({
     defaultValues: {
       xwil_code: "",
       xwil_name: "",
       xaktiv: "",
     },
-  })
+  });
 
   const formGrup = useForm({
     defaultValues: {
       xgrup: "",
       xposisi: "",
     },
-  })
+  });
 
-  const [previewLoading, setPreviewLoading] = useState(false)
-  const [downloadLoading, setDownloadLoading] = useState(false)
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
 
-  const [previewGrupLoading, setPreviewGrupLoading] = useState(false)
-  const [downloadGrupLoading, setDownloadGrupLoading] = useState(false)
+  const [previewGrupLoading, setPreviewGrupLoading] = useState(false);
+  const [downloadGrupLoading, setDownloadGrupLoading] = useState(false);
 
   const handlePreview = async () => {
     try {
-      setPreviewLoading(true)
-      const value = form.state.values
+      setPreviewLoading(true);
+      const value = form.state.values;
 
-      const blob = await displayUserService(value)
+      const blob = await displayUserService(value);
 
-      const url = URL.createObjectURL(blob)
+      const url = URL.createObjectURL(blob);
 
-      window.open(url, "_blank")
+      window.open(url, "_blank");
 
-      form.reset()
+      form.reset();
     } catch (error: any) {
       //   console.log("Backend Error ", error)
       //   console.log("Response Error ", error.response)
 
-      toast.error(error?.message ?? "Terjadi kesalahan")
+      toast.error(error?.message ?? "Terjadi kesalahan");
 
-      const details = error.response?.error?.details ?? []
+      const details = error.response?.error?.details ?? [];
 
       //   console.log("Details error ", details)
 
       details.forEach((item: any) => {
-        const field = form.getFieldInfo(item.field)?.instance
+        const field = form.getFieldInfo(item.field)?.instance;
 
-        if (!field) return
+        if (!field) return;
 
         field.setMeta((prev) => ({
           ...(prev ?? {}),
@@ -83,39 +83,39 @@ function RouteComponent() {
             ...(prev?.errorMap ?? {}),
             onSubmit: item.message,
           },
-        }))
-      })
+        }));
+      });
     } finally {
-      setPreviewLoading(false)
+      setPreviewLoading(false);
     }
-  }
+  };
 
   const handlePreviewGrup = async () => {
     try {
-      setPreviewGrupLoading(true)
-      const value = formGrup.state.values
+      setPreviewGrupLoading(true);
+      const value = formGrup.state.values;
 
-      const blob = await displayUserGrupService(value)
+      const blob = await displayUserGrupService(value);
 
-      const url = URL.createObjectURL(blob)
+      const url = URL.createObjectURL(blob);
 
-      window.open(url, "_blank")
+      window.open(url, "_blank");
 
-      formGrup.reset()
+      formGrup.reset();
     } catch (error: any) {
       // console.log("Backend Error ", error)
       // console.log("Response Error ", error.response)
 
-      toast.error(error?.message ?? "Terjadi kesalahan")
+      toast.error(error?.message ?? "Terjadi kesalahan");
 
-      const details = error.response?.error?.details ?? []
+      const details = error.response?.error?.details ?? [];
 
       // console.log("Details error ", details)
 
       details.forEach((item: any) => {
-        const field = formGrup.getFieldInfo(item.field)?.instance
+        const field = formGrup.getFieldInfo(item.field)?.instance;
 
-        if (!field) return
+        if (!field) return;
 
         field.setMeta((prev) => ({
           ...(prev ?? {}),
@@ -123,42 +123,42 @@ function RouteComponent() {
             ...(prev?.errorMap ?? {}),
             onSubmit: item.message,
           },
-        }))
-      })
+        }));
+      });
     } finally {
-      setPreviewGrupLoading(false)
+      setPreviewGrupLoading(false);
     }
-  }
+  };
 
   const handleDownload = async () => {
     try {
-      setDownloadLoading(true)
+      setDownloadLoading(true);
 
-      const value = form.state.values
+      const value = form.state.values;
 
-      const blob = await displayUserService(value)
+      const blob = await displayUserService(value);
 
-      const url = URL.createObjectURL(blob)
+      const url = URL.createObjectURL(blob);
 
-      const link = document.createElement("a")
-      link.href = url
+      const link = document.createElement("a");
+      link.href = url;
       link.download = `display-user-${value.xwil_name}-${new Date()
         .toISOString()
-        .slice(0, 10)}.pdf`
+        .slice(0, 10)}.pdf`;
 
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
 
-      URL.revokeObjectURL(url)
-      form.reset()
+      URL.revokeObjectURL(url);
+      form.reset();
     } catch (error: any) {
       //   console.log("Backend Error ", error)
       //   console.log("Response Error ", error.response)
 
-      toast.error(error?.message ?? "Terjadi kesalahan")
+      toast.error(error?.message ?? "Terjadi kesalahan");
 
-      const details = error.response?.error?.details ?? []
+      const details = error.response?.error?.details ?? [];
       //   console.log("response", error.response)
       //   console.log("error", error.response?.error)
       //   console.log("details", error.response?.error?.details)
@@ -166,9 +166,9 @@ function RouteComponent() {
       //   console.log("Details error ", details)
 
       details.forEach((item: any) => {
-        const field = form.getFieldInfo(item.field)?.instance
+        const field = form.getFieldInfo(item.field)?.instance;
 
-        if (!field) return
+        if (!field) return;
 
         field.setMeta((prev) => ({
           ...(prev ?? {}),
@@ -176,39 +176,39 @@ function RouteComponent() {
             ...(prev?.errorMap ?? {}),
             onSubmit: item.message,
           },
-        }))
-      })
+        }));
+      });
     } finally {
-      setDownloadLoading(false)
+      setDownloadLoading(false);
     }
-  }
+  };
 
   const handleDownloadGrup = async () => {
     try {
-      setDownloadGrupLoading(true)
-      const value = formGrup.state.values
+      setDownloadGrupLoading(true);
+      const value = formGrup.state.values;
 
-      const blob = await displayUserGrupService(value)
+      const blob = await displayUserGrupService(value);
 
-      const url = URL.createObjectURL(blob)
+      const url = URL.createObjectURL(blob);
 
-      const link = document.createElement("a")
-      link.href = url
-      link.download = `display-user-posisi-${value.xposisi}-${new Date().toISOString().slice(0, 10)}.pdf`
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `display-user-posisi-${value.xposisi}-${new Date().toISOString().slice(0, 10)}.pdf`;
 
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
 
-      URL.revokeObjectURL(url)
-      formGrup.reset()
+      URL.revokeObjectURL(url);
+      formGrup.reset();
     } catch (error: any) {
       // console.log("Backend Error ", error)
       // console.log("Response Error ", error.response)
 
-      toast.error(error?.message ?? "Terjadi kesalahan")
+      toast.error(error?.message ?? "Terjadi kesalahan");
 
-      const details = error.response?.error?.details ?? []
+      const details = error.response?.error?.details ?? [];
       // console.log("response", error.response)
       // console.log("error", error.response?.error)
       // console.log("details", error.response?.error?.details)
@@ -216,9 +216,9 @@ function RouteComponent() {
       // console.log("Details error ", details)
 
       details.forEach((item: any) => {
-        const field = formGrup.getFieldInfo(item.field)?.instance
+        const field = formGrup.getFieldInfo(item.field)?.instance;
 
-        if (!field) return
+        if (!field) return;
 
         field.setMeta((prev) => ({
           ...(prev ?? {}),
@@ -226,12 +226,12 @@ function RouteComponent() {
             ...(prev?.errorMap ?? {}),
             onSubmit: item.message,
           },
-        }))
-      })
+        }));
+      });
     } finally {
-      setDownloadGrupLoading(false)
+      setDownloadGrupLoading(false);
     }
-  }
+  };
 
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -242,8 +242,8 @@ function RouteComponent() {
         <CardContent>
           <form
             onSubmit={async (e) => {
-              e.preventDefault()
-              form.handleSubmit()
+              e.preventDefault();
+              form.handleSubmit();
             }}
           >
             <form.Field name="xwil_code">
@@ -254,9 +254,10 @@ function RouteComponent() {
                   options={[]}
                   queryKey={["xwil_code-options"]}
                   queryFn={getWilCodeOptions}
+                  mapData={(data) => data}
                   placeholder="Cari wilayah..."
                   onValueChange={(option) => {
-                    form.setFieldValue("xwil_name", option?.label ?? "")
+                    form.setFieldValue("xwil_name", option?.label ?? "");
                   }}
                 />
               )}
@@ -270,6 +271,7 @@ function RouteComponent() {
                   options={[]}
                   queryKey={["xaktiv-options"]}
                   queryFn={getStsUserOptions}
+                  mapData={(data) => data}
                   placeholder="Cari status..."
                 />
               )}
@@ -311,8 +313,8 @@ function RouteComponent() {
         <CardContent>
           <form
             onSubmit={async (e) => {
-              e.preventDefault()
-              formGrup.handleSubmit()
+              e.preventDefault();
+              formGrup.handleSubmit();
             }}
           >
             <formGrup.Field name="xgrup">
@@ -323,10 +325,11 @@ function RouteComponent() {
                   options={[]}
                   queryKey={["xgrup-options"]}
                   queryFn={getJenisPenerima}
+                  mapData={(data) => data}
                   placeholder="Cari bagian..."
                   onValueChange={(option) => {
-                    formGrup.setFieldValue("xgrup", option?.value ?? "")
-                    formGrup.setFieldValue("xposisi", option?.label ?? "")
+                    formGrup.setFieldValue("xgrup", option?.value ?? "");
+                    formGrup.setFieldValue("xposisi", option?.label ?? "");
                   }}
                 />
               )}
@@ -361,5 +364,5 @@ function RouteComponent() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }

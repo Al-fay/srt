@@ -19,41 +19,32 @@ import type {
 export async function getUsers(
   params?: Partial<DataTableQueryParams>,
 ): Promise<GetUsersResponse> {
-  try {
-    const queryParams: Record<string, string | number | boolean> = {};
+  const queryParams: Record<string, string | number | boolean> = {};
 
-    if (params?.page !== undefined) queryParams.page = params.page;
-    if (params?.limit !== undefined) queryParams.size = params.limit;
-    if (params?.search) queryParams.search = params.search;
-    if (params?.sortBy) queryParams.sortBy = params.sortBy;
-    if (params?.sortOrder) queryParams.sortOrder = params.sortOrder;
+  if (params?.page !== undefined) queryParams.page = params.page;
+  if (params?.limit !== undefined) queryParams.size = params.limit;
+  if (params?.search) queryParams.search = params.search;
+  if (params?.sortBy) queryParams.sortBy = params.sortBy;
+  if (params?.sortOrder) queryParams.sortOrder = params.sortOrder;
 
-    if (params?.filters) {
-      Object.entries(params.filters).forEach(([k, v]) => {
-        if (v) queryParams[k] = v;
-      });
-    }
-
-    const res = await api<GetUsersResponse>("/auth/users", {
-      params: queryParams,
+  if (params?.filters) {
+    Object.entries(params.filters).forEach(([k, v]) => {
+      if (v) queryParams[k] = v;
     });
-
-    return { ...res, error: null };
-  } catch (error: any) {
-    return {
-      success: false,
-      data: [],
-      total: 0,
-      page: 0,
-      size: 0,
-      timestamp: new Date().toISOString(),
-      error: error.response,
-    };
   }
+
+  const res = await api<GetUsersResponse>("/auth/users", {
+    method: "POST",
+    params: queryParams,
+  });
+
+  return res;
 }
 
 export async function getDtBagianOptions() {
-  const response = await api<ApiResponse<ComboboxOption[]>>("/auth/dtbag");
+  const response = await api<ApiResponse<ComboboxOption[]>>("/auth/dtbag", {
+    method: "POST",
+  });
 
   return response.data;
 }
@@ -72,6 +63,12 @@ export async function signInService(value: LoginForm): Promise<SignInResponse> {
     headers: {
       "Content-Type": "application/json",
     },
+  });
+}
+
+export async function refreshTokenService() {
+  return api<{ success: boolean; data: { token: string } }>("/auth/refresh", {
+    method: "POST",
   });
 }
 
@@ -213,7 +210,7 @@ export async function AktivasiUserViaAdm(value: UpdateUser) {
 
 export async function getUserById(xpass_id: string) {
   return api<MeResponse>(`/auth/user/${xpass_id}`, {
-    method: "GET",
+    method: "POST",
   });
 }
 
@@ -231,7 +228,7 @@ export async function UpdateUser(value: UpdateUser) {
     xpil: value.xpil,
   });
 
-  console.log("Payload : ", payload);
+  // console.log("Payload : ", payload);
 
   return api<UpdateUserResponse>("/auth/update", {
     method: "PATCH",

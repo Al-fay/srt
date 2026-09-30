@@ -1,28 +1,27 @@
-import type { UserFormData, UserMode } from "@/types/user";
-import { Button } from "../ui/button";
+import type {
+  BagianForm,
+  BagianGrupType,
+  GetDataBagianGrupResponse,
+} from "@/types/grup";
+import { useForm } from "@tanstack/react-form";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
+import { Button } from "../ui/button";
 import { ArrowLeft, ListRestart, Save } from "lucide-react";
 import { Card } from "../ui/card";
-import { useForm } from "@tanstack/react-form";
 import { Field, FieldGroup, FieldSeparator, FieldSet } from "../ui/field";
-import { toast } from "sonner";
 import { TextField } from "../form/text-field";
 import { ComboboxField } from "../form/combobox-field";
-import {
-  getBagianUserOptions,
-  getWilCodeOptions,
-} from "@/services/options.service";
-import { defaultUser } from "@/lib/defaultUser";
+import { getDataGrupBag } from "@/services/grup.service";
 
 type Props = {
-  mode: UserMode;
-  initialData?: UserFormData;
-  onSubmit: (value: UserFormData) => Promise<void> | void;
+  mode: BagianGrupType;
+  initialData?: BagianForm;
+  onSubmit: (value: BagianForm) => Promise<void> | void;
   backTo?: string;
-  redirectAfterSubmit?: boolean;
 };
 
-export function UserFrom({
+export default function SBagianForm({
   mode,
   initialData,
   onSubmit,
@@ -30,23 +29,22 @@ export function UserFrom({
 }: Props) {
   const navigate = useNavigate();
   const form = useForm({
-    defaultValues: initialData ?? defaultUser,
+    defaultValues: initialData ?? {
+      xkode_bag: "",
+      xket: "",
+      xgrup: "",
+    },
     onSubmit: async ({ value, formApi }) => {
       try {
         await onSubmit(value);
-
         toast.success("Data berhasil disimpan");
-
-        navigate({ to: "/admin/user" });
+        navigate({ to: "/admin/sbagian" });
       } catch (error: any) {
-        // console.log("Backend Error : ", error)
-        // console.log("response error : ", error.response)
-
         toast.error(error?.message ?? "Terjadi kesalahan");
 
         const details = error.response?.error?.details ?? [];
 
-        // console.log("Details : ", details)
+        // console.log("Details : ", details);
 
         details.forEach((item: any) => {
           formApi.setFieldMeta(item.field, (prev) => ({
@@ -61,7 +59,7 @@ export function UserFrom({
     },
   });
 
-  const title = mode === "create" ? `Tambah User` : "Edit User";
+  const title = mode === "create" ? "Tambah Bagian" : "Edit Bagian";
 
   return (
     <>
@@ -85,87 +83,44 @@ export function UserFrom({
           <FieldGroup>
             <FieldSet>
               <FieldGroup>
-                <form.Field name="xpass_id">
+                <form.Field name="xkode_bag">
                   {(field) => (
                     <TextField
                       field={field}
-                      label="Mail"
-                      placeholder="example@mail.sy"
-                      maxLength={50}
+                      label="Kode Bagian"
+                      maxLength={3}
+                      placeholder="A01"
+                      className="uppercase"
                     />
                   )}
                 </form.Field>
-
-                <form.Field name="xnip">
+                <form.Field name="xket">
                   {(field) => (
                     <TextField
                       field={field}
-                      label="NIP"
-                      placeholder="NIP"
-                      onlyNumber
-                      maxLength={8}
+                      label="Keterangan"
+                      maxLength={60}
+                      placeholder="Masukan Keterangan"
                     />
                   )}
                 </form.Field>
-
-                <form.Field name="xpass_name">
+                <form.Field name="xgrup">
                   {(field) => (
-                    <TextField
+                    <ComboboxField<GetDataBagianGrupResponse>
                       field={field}
-                      label="Nama"
-                      placeholder="Nama pengguna"
-                      maxLength={50}
-                    />
-                  )}
-                </form.Field>
-
-                {/* <form.Field name="xpass_wd">
-                  {(field) => (
-                    <TextField
-                      field={field}
-                      label="Password"
-                      placeholder="password"
-                      type="Password"
-                    />
-                  )}
-                </form.Field> */}
-
-                <form.Field name="xbagian">
-                  {(field) => (
-                    <ComboboxField
-                      field={field}
-                      label="Bagian"
-                      options={[]}
-                      queryKey={["bagian-options"]}
-                      queryFn={getBagianUserOptions}
-                      mapData={(data) => data}
-                      placeholder="Cari bagian..."
-                    />
-                  )}
-                </form.Field>
-
-                <form.Field name="xwil_code">
-                  {(field) => (
-                    <ComboboxField
-                      field={field}
-                      label="Wilayah"
-                      options={[]}
-                      queryKey={["wilcode-options"]}
-                      queryFn={getWilCodeOptions}
-                      mapData={(data) => data}
-                      placeholder="Cari wilayah..."
-                    />
-                  )}
-                </form.Field>
-
-                <form.Field name="xnohp">
-                  {(field) => (
-                    <TextField
-                      field={field}
-                      label="No.HP"
-                      placeholder="No.Hp"
-                      onlyNumber
-                      maxLength={13}
+                      label="Grup Bagian"
+                      queryKey={["grup-bagian"]}
+                      queryFn={getDataGrupBag}
+                      queryParams={{
+                        page: 1,
+                        limit: 20,
+                      }}
+                      mapData={(data) =>
+                        data.data.map((item) => ({
+                          value: String(item.grup),
+                          label: item.ket_grup,
+                        }))
+                      }
                     />
                   )}
                 </form.Field>

@@ -16,12 +16,20 @@ import { Route as ArsipSuratMasukIndexRouteImport } from './routes/arsip-surat-m
 import { Route as AuthSignInRouteImport } from './routes/auth/sign-in'
 import { Route as ListOtoSuratIndexRouteImport } from './routes/list-oto-surat/index'
 import { Route as MemoIndexRouteImport } from './routes/memo/index'
+import { Route as MemoCreateRouteImport } from './routes/memo/create'
 import { Route as PengumumanLiburIndexRouteImport } from './routes/pengumuman-libur/index'
+import { Route as PengumumanLiburCreateRouteImport } from './routes/pengumuman-libur/create'
+import { Route as AdminBagianIndexRouteImport } from './routes/admin/bagian/index'
+import { Route as AdminBagianCreateRouteImport } from './routes/admin/bagian/create'
 import { Route as AdminDisplayIndexRouteImport } from './routes/admin/display/index'
+import { Route as AdminSbagianIndexRouteImport } from './routes/admin/sbagian/index'
+import { Route as AdminSbagianCreateRouteImport } from './routes/admin/sbagian/create'
 import { Route as AdminUserIndexRouteImport } from './routes/admin/user/index'
 import { Route as AdminUserCreateRouteImport } from './routes/admin/user/create'
 import { Route as SuratKeluarEksternalCreateRouteImport } from './routes/surat-keluar/eksternal/create'
 import { Route as SuratKeluarInternalCreateRouteImport } from './routes/surat-keluar/internal/create'
+import { Route as AdminBagianIdEditRouteImport } from './routes/admin/bagian/$id/edit'
+import { Route as AdminSbagianIdEditRouteImport } from './routes/admin/sbagian/$id/edit'
 import { Route as AdminUserEditIdRouteImport } from './routes/admin/user/edit.$id'
 import { Route as SuratTugasUmumEditIdRouteImport } from './routes/surat-tugas/umum/edit.$id'
 
@@ -60,14 +68,44 @@ const MemoIndexRoute = MemoIndexRouteImport.update({
   path: '/memo/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MemoCreateRoute = MemoCreateRouteImport.update({
+  id: '/memo/create',
+  path: '/memo/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PengumumanLiburIndexRoute = PengumumanLiburIndexRouteImport.update({
   id: '/pengumuman-libur/',
   path: '/pengumuman-libur/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PengumumanLiburCreateRoute = PengumumanLiburCreateRouteImport.update({
+  id: '/pengumuman-libur/create',
+  path: '/pengumuman-libur/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminBagianIndexRoute = AdminBagianIndexRouteImport.update({
+  id: '/admin/bagian/',
+  path: '/admin/bagian/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminBagianCreateRoute = AdminBagianCreateRouteImport.update({
+  id: '/admin/bagian/create',
+  path: '/admin/bagian/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminDisplayIndexRoute = AdminDisplayIndexRouteImport.update({
   id: '/admin/display/',
   path: '/admin/display/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSbagianIndexRoute = AdminSbagianIndexRouteImport.update({
+  id: '/admin/sbagian/',
+  path: '/admin/sbagian/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSbagianCreateRoute = AdminSbagianCreateRouteImport.update({
+  id: '/admin/sbagian/create',
+  path: '/admin/sbagian/create',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminUserIndexRoute = AdminUserIndexRouteImport.update({
@@ -92,6 +130,16 @@ const SuratKeluarInternalCreateRoute =
     path: '/surat-keluar/internal/create',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AdminBagianIdEditRoute = AdminBagianIdEditRouteImport.update({
+  id: '/admin/bagian/$id/edit',
+  path: '/admin/bagian/$id/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSbagianIdEditRoute = AdminSbagianIdEditRouteImport.update({
+  id: '/admin/sbagian/$id/edit',
+  path: '/admin/sbagian/$id/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminUserEditIdRoute = AdminUserEditIdRouteImport.update({
   id: '/admin/user/edit/$id',
   path: '/admin/user/edit/$id',
@@ -107,16 +155,24 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/profile': typeof ProfileRoute
   '/auth/sign-in': typeof AuthSignInRoute
+  '/memo/create': typeof MemoCreateRoute
+  '/pengumuman-libur/create': typeof PengumumanLiburCreateRoute
   '/arsip-surat-keluar/': typeof ArsipSuratKeluarIndexRoute
   '/arsip-surat-masuk/': typeof ArsipSuratMasukIndexRoute
   '/list-oto-surat/': typeof ListOtoSuratIndexRoute
   '/memo/': typeof MemoIndexRoute
   '/pengumuman-libur/': typeof PengumumanLiburIndexRoute
+  '/admin/bagian/create': typeof AdminBagianCreateRoute
+  '/admin/sbagian/create': typeof AdminSbagianCreateRoute
   '/admin/user/create': typeof AdminUserCreateRoute
   '/surat-keluar/eksternal/create': typeof SuratKeluarEksternalCreateRoute
   '/surat-keluar/internal/create': typeof SuratKeluarInternalCreateRoute
+  '/admin/bagian/': typeof AdminBagianIndexRoute
   '/admin/display/': typeof AdminDisplayIndexRoute
+  '/admin/sbagian/': typeof AdminSbagianIndexRoute
   '/admin/user/': typeof AdminUserIndexRoute
+  '/admin/bagian/$id/edit': typeof AdminBagianIdEditRoute
+  '/admin/sbagian/$id/edit': typeof AdminSbagianIdEditRoute
   '/admin/user/edit/$id': typeof AdminUserEditIdRoute
   '/surat-tugas/umum/edit/$id': typeof SuratTugasUmumEditIdRoute
 }
@@ -124,16 +180,24 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/profile': typeof ProfileRoute
   '/auth/sign-in': typeof AuthSignInRoute
+  '/memo/create': typeof MemoCreateRoute
+  '/pengumuman-libur/create': typeof PengumumanLiburCreateRoute
   '/arsip-surat-keluar': typeof ArsipSuratKeluarIndexRoute
   '/arsip-surat-masuk': typeof ArsipSuratMasukIndexRoute
   '/list-oto-surat': typeof ListOtoSuratIndexRoute
   '/memo': typeof MemoIndexRoute
   '/pengumuman-libur': typeof PengumumanLiburIndexRoute
+  '/admin/bagian/create': typeof AdminBagianCreateRoute
+  '/admin/sbagian/create': typeof AdminSbagianCreateRoute
   '/admin/user/create': typeof AdminUserCreateRoute
   '/surat-keluar/eksternal/create': typeof SuratKeluarEksternalCreateRoute
   '/surat-keluar/internal/create': typeof SuratKeluarInternalCreateRoute
+  '/admin/bagian': typeof AdminBagianIndexRoute
   '/admin/display': typeof AdminDisplayIndexRoute
+  '/admin/sbagian': typeof AdminSbagianIndexRoute
   '/admin/user': typeof AdminUserIndexRoute
+  '/admin/bagian/$id/edit': typeof AdminBagianIdEditRoute
+  '/admin/sbagian/$id/edit': typeof AdminSbagianIdEditRoute
   '/admin/user/edit/$id': typeof AdminUserEditIdRoute
   '/surat-tugas/umum/edit/$id': typeof SuratTugasUmumEditIdRoute
 }
@@ -142,16 +206,24 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/profile': typeof ProfileRoute
   '/auth/sign-in': typeof AuthSignInRoute
+  '/memo/create': typeof MemoCreateRoute
+  '/pengumuman-libur/create': typeof PengumumanLiburCreateRoute
   '/arsip-surat-keluar/': typeof ArsipSuratKeluarIndexRoute
   '/arsip-surat-masuk/': typeof ArsipSuratMasukIndexRoute
   '/list-oto-surat/': typeof ListOtoSuratIndexRoute
   '/memo/': typeof MemoIndexRoute
   '/pengumuman-libur/': typeof PengumumanLiburIndexRoute
+  '/admin/bagian/create': typeof AdminBagianCreateRoute
+  '/admin/sbagian/create': typeof AdminSbagianCreateRoute
   '/admin/user/create': typeof AdminUserCreateRoute
   '/surat-keluar/eksternal/create': typeof SuratKeluarEksternalCreateRoute
   '/surat-keluar/internal/create': typeof SuratKeluarInternalCreateRoute
+  '/admin/bagian/': typeof AdminBagianIndexRoute
   '/admin/display/': typeof AdminDisplayIndexRoute
+  '/admin/sbagian/': typeof AdminSbagianIndexRoute
   '/admin/user/': typeof AdminUserIndexRoute
+  '/admin/bagian/$id/edit': typeof AdminBagianIdEditRoute
+  '/admin/sbagian/$id/edit': typeof AdminSbagianIdEditRoute
   '/admin/user/edit/$id': typeof AdminUserEditIdRoute
   '/surat-tugas/umum/edit/$id': typeof SuratTugasUmumEditIdRoute
 }
@@ -161,16 +233,24 @@ export interface FileRouteTypes {
     | '/'
     | '/profile'
     | '/auth/sign-in'
+    | '/memo/create'
+    | '/pengumuman-libur/create'
     | '/arsip-surat-keluar/'
     | '/arsip-surat-masuk/'
     | '/list-oto-surat/'
     | '/memo/'
     | '/pengumuman-libur/'
+    | '/admin/bagian/create'
+    | '/admin/sbagian/create'
     | '/admin/user/create'
     | '/surat-keluar/eksternal/create'
     | '/surat-keluar/internal/create'
+    | '/admin/bagian/'
     | '/admin/display/'
+    | '/admin/sbagian/'
     | '/admin/user/'
+    | '/admin/bagian/$id/edit'
+    | '/admin/sbagian/$id/edit'
     | '/admin/user/edit/$id'
     | '/surat-tugas/umum/edit/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -178,16 +258,24 @@ export interface FileRouteTypes {
     | '/'
     | '/profile'
     | '/auth/sign-in'
+    | '/memo/create'
+    | '/pengumuman-libur/create'
     | '/arsip-surat-keluar'
     | '/arsip-surat-masuk'
     | '/list-oto-surat'
     | '/memo'
     | '/pengumuman-libur'
+    | '/admin/bagian/create'
+    | '/admin/sbagian/create'
     | '/admin/user/create'
     | '/surat-keluar/eksternal/create'
     | '/surat-keluar/internal/create'
+    | '/admin/bagian'
     | '/admin/display'
+    | '/admin/sbagian'
     | '/admin/user'
+    | '/admin/bagian/$id/edit'
+    | '/admin/sbagian/$id/edit'
     | '/admin/user/edit/$id'
     | '/surat-tugas/umum/edit/$id'
   id:
@@ -195,16 +283,24 @@ export interface FileRouteTypes {
     | '/'
     | '/profile'
     | '/auth/sign-in'
+    | '/memo/create'
+    | '/pengumuman-libur/create'
     | '/arsip-surat-keluar/'
     | '/arsip-surat-masuk/'
     | '/list-oto-surat/'
     | '/memo/'
     | '/pengumuman-libur/'
+    | '/admin/bagian/create'
+    | '/admin/sbagian/create'
     | '/admin/user/create'
     | '/surat-keluar/eksternal/create'
     | '/surat-keluar/internal/create'
+    | '/admin/bagian/'
     | '/admin/display/'
+    | '/admin/sbagian/'
     | '/admin/user/'
+    | '/admin/bagian/$id/edit'
+    | '/admin/sbagian/$id/edit'
     | '/admin/user/edit/$id'
     | '/surat-tugas/umum/edit/$id'
   fileRoutesById: FileRoutesById
@@ -213,16 +309,24 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProfileRoute: typeof ProfileRoute
   AuthSignInRoute: typeof AuthSignInRoute
+  MemoCreateRoute: typeof MemoCreateRoute
+  PengumumanLiburCreateRoute: typeof PengumumanLiburCreateRoute
   ArsipSuratKeluarIndexRoute: typeof ArsipSuratKeluarIndexRoute
   ArsipSuratMasukIndexRoute: typeof ArsipSuratMasukIndexRoute
   ListOtoSuratIndexRoute: typeof ListOtoSuratIndexRoute
   MemoIndexRoute: typeof MemoIndexRoute
   PengumumanLiburIndexRoute: typeof PengumumanLiburIndexRoute
+  AdminBagianCreateRoute: typeof AdminBagianCreateRoute
+  AdminSbagianCreateRoute: typeof AdminSbagianCreateRoute
   AdminUserCreateRoute: typeof AdminUserCreateRoute
   SuratKeluarEksternalCreateRoute: typeof SuratKeluarEksternalCreateRoute
   SuratKeluarInternalCreateRoute: typeof SuratKeluarInternalCreateRoute
+  AdminBagianIndexRoute: typeof AdminBagianIndexRoute
   AdminDisplayIndexRoute: typeof AdminDisplayIndexRoute
+  AdminSbagianIndexRoute: typeof AdminSbagianIndexRoute
   AdminUserIndexRoute: typeof AdminUserIndexRoute
+  AdminBagianIdEditRoute: typeof AdminBagianIdEditRoute
+  AdminSbagianIdEditRoute: typeof AdminSbagianIdEditRoute
   AdminUserEditIdRoute: typeof AdminUserEditIdRoute
   SuratTugasUmumEditIdRoute: typeof SuratTugasUmumEditIdRoute
 }
@@ -278,6 +382,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MemoIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/memo/create': {
+      id: '/memo/create'
+      path: '/memo/create'
+      fullPath: '/memo/create'
+      preLoaderRoute: typeof MemoCreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pengumuman-libur/': {
       id: '/pengumuman-libur/'
       path: '/pengumuman-libur'
@@ -285,11 +396,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PengumumanLiburIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pengumuman-libur/create': {
+      id: '/pengumuman-libur/create'
+      path: '/pengumuman-libur/create'
+      fullPath: '/pengumuman-libur/create'
+      preLoaderRoute: typeof PengumumanLiburCreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/bagian/': {
+      id: '/admin/bagian/'
+      path: '/admin/bagian'
+      fullPath: '/admin/bagian/'
+      preLoaderRoute: typeof AdminBagianIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/bagian/create': {
+      id: '/admin/bagian/create'
+      path: '/admin/bagian/create'
+      fullPath: '/admin/bagian/create'
+      preLoaderRoute: typeof AdminBagianCreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/display/': {
       id: '/admin/display/'
       path: '/admin/display'
       fullPath: '/admin/display/'
       preLoaderRoute: typeof AdminDisplayIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/sbagian/': {
+      id: '/admin/sbagian/'
+      path: '/admin/sbagian'
+      fullPath: '/admin/sbagian/'
+      preLoaderRoute: typeof AdminSbagianIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/sbagian/create': {
+      id: '/admin/sbagian/create'
+      path: '/admin/sbagian/create'
+      fullPath: '/admin/sbagian/create'
+      preLoaderRoute: typeof AdminSbagianCreateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/user/': {
@@ -320,6 +466,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SuratKeluarInternalCreateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/bagian/$id/edit': {
+      id: '/admin/bagian/$id/edit'
+      path: '/admin/bagian/$id/edit'
+      fullPath: '/admin/bagian/$id/edit'
+      preLoaderRoute: typeof AdminBagianIdEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/sbagian/$id/edit': {
+      id: '/admin/sbagian/$id/edit'
+      path: '/admin/sbagian/$id/edit'
+      fullPath: '/admin/sbagian/$id/edit'
+      preLoaderRoute: typeof AdminSbagianIdEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/user/edit/$id': {
       id: '/admin/user/edit/$id'
       path: '/admin/user/edit/$id'
@@ -341,16 +501,24 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProfileRoute: ProfileRoute,
   AuthSignInRoute: AuthSignInRoute,
+  MemoCreateRoute: MemoCreateRoute,
+  PengumumanLiburCreateRoute: PengumumanLiburCreateRoute,
   ArsipSuratKeluarIndexRoute: ArsipSuratKeluarIndexRoute,
   ArsipSuratMasukIndexRoute: ArsipSuratMasukIndexRoute,
   ListOtoSuratIndexRoute: ListOtoSuratIndexRoute,
   MemoIndexRoute: MemoIndexRoute,
   PengumumanLiburIndexRoute: PengumumanLiburIndexRoute,
+  AdminBagianCreateRoute: AdminBagianCreateRoute,
+  AdminSbagianCreateRoute: AdminSbagianCreateRoute,
   AdminUserCreateRoute: AdminUserCreateRoute,
   SuratKeluarEksternalCreateRoute: SuratKeluarEksternalCreateRoute,
   SuratKeluarInternalCreateRoute: SuratKeluarInternalCreateRoute,
+  AdminBagianIndexRoute: AdminBagianIndexRoute,
   AdminDisplayIndexRoute: AdminDisplayIndexRoute,
+  AdminSbagianIndexRoute: AdminSbagianIndexRoute,
   AdminUserIndexRoute: AdminUserIndexRoute,
+  AdminBagianIdEditRoute: AdminBagianIdEditRoute,
+  AdminSbagianIdEditRoute: AdminSbagianIdEditRoute,
   AdminUserEditIdRoute: AdminUserEditIdRoute,
   SuratTugasUmumEditIdRoute: SuratTugasUmumEditIdRoute,
 }

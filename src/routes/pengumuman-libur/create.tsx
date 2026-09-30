@@ -1,24 +1,23 @@
-// import PengumumanLiburFormSkeleton from "@/components/skeletons/pengumuman-libur-form-skeleton"
-// import PengumumanLiburForm from "@/components/surat/PengumumanLiburForm"
-// import { createFileRoute, useNavigate } from "@tanstack/react-router"
+import PengumumanLiburFormSkeleton from "@/components/skeletons/pengumuman-libur-form-skeleton";
+import PengumumanLiburForm from "@/components/surat/PengumumanLiburForm";
+import { createFileRoute } from "@tanstack/react-router";
+import { toast } from "sonner";
 
-// export const Route = createFileRoute("/pengumuman-libur/create")({
-//   pendingComponent: PengumumanLiburFormSkeleton,
-//   component: RouteComponent,
-// })
+export const Route = createFileRoute("/pengumuman-libur/create")({
+  pendingComponent: PengumumanLiburFormSkeleton,
+  component: RouteComponent,
+});
 
-// function RouteComponent() {
-//   const navigate = useNavigate()
-
-//   return (
-//     <>
-//       <PengumumanLiburForm
-//         mode="create"
-//         onSubmit={async (value) => {
-//           // await createSurat(value)
-//           navigate({ to: ".." })
-//         }}
-//       />
-//     </>
-//   )
-// }
+function RouteComponent() {
+  return (
+    <>
+      <PengumumanLiburForm
+        mode="create"
+        onSubmit={async () => {
+          // await createSurat(value)
+          toast.info("Fitur ini dalam tahap pengembangan");
+        }}
+      />
+    </>
+  );
+}

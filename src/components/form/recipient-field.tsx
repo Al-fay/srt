@@ -7,12 +7,19 @@ import { jenisPenerimaOptions } from "@/lib/options";
 import type { Penerima } from "@/types/surat";
 import { getErrorMessage } from "@/lib/form-errors";
 import { FieldError } from "../ui/field";
-import { API_URL } from "@/lib/env";
 import type { ComboboxOption } from "./combobox-field";
+import { api } from "@/lib/api";
 
 type Props = {
   field: AnyFieldApi;
   label: string;
+};
+
+type JenisPenerimaResponse = {
+  data?: Array<{
+    value: string | number;
+    label: string;
+  }>;
 };
 
 export function RecipientField({ field, label }: Props) {
@@ -20,24 +27,19 @@ export function RecipientField({ field, label }: Props) {
   const errors = field.state.meta.errors;
   const MAX_ROW = 10;
   const MIN_ROW = 1;
-  const BASE_URL = `${API_URL}/surat/jenispenerima`;
 
   const fetchJenisPenerima = async (
     xPil: string,
   ): Promise<ComboboxOption[]> => {
     if (!xPil) return [];
 
-    const res = await fetch(`${BASE_URL}?xPil=${encodeURIComponent(xPil)}`, {
-      credentials: "include",
+    const response = await api<JenisPenerimaResponse>("/surat/jenispenerima", {
+      params: {
+        xPil,
+      },
     });
 
-    if (!res.ok) {
-      throw new Error("Gagal mengambil data");
-    }
-
-    const json = await res.json();
-
-    return (json.data ?? []).map((item: any) => {
+    return (response.data ?? []).map((item) => {
       const value = String(item.value);
       const label = String(item.label);
 
@@ -51,7 +53,15 @@ export function RecipientField({ field, label }: Props) {
 
   const addRow = () => {
     if (rows.length >= MAX_ROW) return;
-    field.handleChange([...rows, { bagian: "", jabatan: "", media: "" }]);
+
+    field.handleChange([
+      ...rows,
+      {
+        bagian: "",
+        jabatan: "",
+        media: "",
+      },
+    ]);
   };
 
   const removeRow = (index: number) => {
@@ -70,6 +80,7 @@ export function RecipientField({ field, label }: Props) {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <p className="text-sm font-medium">{label}</p>
+
         <Button type="button" size="sm" variant="outline" onClick={addRow}>
           <Plus className="mr-1 h-4 w-4" />
           Tambah
@@ -83,10 +94,6 @@ export function RecipientField({ field, label }: Props) {
       )}
 
       {rows.map((row, index) => (
-        // <div
-        //   key={index}
-        //   className="grid grid-cols-1 gap-3 md:grid-cols-[repeat(3,minmax(0,1fr))_10px]"
-        // >
         <div
           key={index}
           className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_1fr_40px]"
@@ -104,8 +111,6 @@ export function RecipientField({ field, label }: Props) {
                 xTipe_penerima: "",
                 xTipe_penerimaValue: "",
               };
-
-              // console.log("NEW ROW:", newRow)
 
               updateRow(index, newRow);
             }}

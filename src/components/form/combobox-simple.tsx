@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Check, ChevronsUpDown, Plus } from "lucide-react";
-
+import { Check, ChevronsUpDown, Loader2, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,7 +20,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 type Props = {
-  value: string;
+  value: string | null;
   onChange: (value: string, option?: ComboboxOption) => void;
   options?: ComboboxOption[];
   placeholder?: string;
@@ -48,6 +47,7 @@ export function ComboboxSimple({
     data = [],
     error,
     isError,
+    isLoading,
   } = useQuery({
     queryKey: queryKey ?? [],
     queryFn: queryFn ?? (() => Promise.resolve([])),
@@ -117,7 +117,14 @@ export function ComboboxSimple({
           />
 
           <CommandList>
-            {isError ? (
+            {isLoading ? (
+              <CommandEmpty>
+                <div className="flex items-center justify-center gap-2 py-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Memuat data...</span>
+                </div>
+              </CommandEmpty>
+            ) : isError ? (
               <CommandEmpty className="whitespace-pre-line">
                 {error instanceof Error ? error.message : "Terjadi kesalahan"}
               </CommandEmpty>

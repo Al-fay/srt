@@ -126,7 +126,7 @@ export function SuratForm({ mode, type, initialData, onSubmit }: Props) {
 
   const title =
     mode === "create"
-      ? `Buat Surat Keluar ${type === "internal" ? "Internal" : "Eksternal"}`
+      ? `Buat Surat Keluar ${type === "internal" ? "Internal/Eksternal" : "Eksternal"}`
       : `Ubah Surat Keluar ${type === "internal" ? "Internal" : "Eksternal"}`;
 
   return (
@@ -157,6 +157,7 @@ export function SuratForm({ mode, type, initialData, onSubmit }: Props) {
                             readonly
                             queryKey={["kantor-options"]}
                             queryFn={getKotaOptions}
+                            mapData={(data) => data}
                             placeholder="Cari kantor..."
                           />
                         )}
@@ -168,18 +169,18 @@ export function SuratForm({ mode, type, initialData, onSubmit }: Props) {
                     </div>
 
                     {/* {type === "internal" && ( */}
-                    <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-                      {/* <form.Field name="nomor">
-                    {(field) => (
-                      <TextField
-                        field={field}
-                        label="Nomor"
-                        placeholder="001"
-                        maxLength={3}
-                        onlyNumber
-                      />
-                    )}
-                  </form.Field> */}
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-4">
+                      <form.Field name="surat.xNo_srt">
+                        {(field) => (
+                          <TextField
+                            field={field}
+                            label="Nomor"
+                            placeholder="001"
+                            maxLength={3}
+                            onlyNumber
+                          />
+                        )}
+                      </form.Field>
 
                       <form.Field name="surat.xNo_bag">
                         {(field) => (
@@ -189,6 +190,7 @@ export function SuratForm({ mode, type, initialData, onSubmit }: Props) {
                             options={[]}
                             queryKey={["bagian-options"]}
                             queryFn={getBagianOptions}
+                            mapData={(data) => data}
                             placeholder="Cari bagian..."
                           />
                         )}
@@ -202,6 +204,7 @@ export function SuratForm({ mode, type, initialData, onSubmit }: Props) {
                             options={[]}
                             queryKey={["kode-options"]}
                             queryFn={getKodeOptions}
+                            mapData={(data) => data}
                             placeholder="Cari kode..."
                           />
                         )}
@@ -215,6 +218,7 @@ export function SuratForm({ mode, type, initialData, onSubmit }: Props) {
                             options={[]}
                             queryKey={["bulan-options"]}
                             queryFn={getBulanOptions}
+                            mapData={(data) => data}
                             placeholder="Cari bulan..."
                           />
                         )}
@@ -253,9 +257,21 @@ export function SuratForm({ mode, type, initialData, onSubmit }: Props) {
                           }
                         >
                           {(jumlahLampiran) => {
-                            return jumlahLampiran != "" &&
-                              jumlahLampiran != "0" &&
-                              jumlahLampiran != "00" ? (
+                            const isEmptyLampiran =
+                              jumlahLampiran === "" ||
+                              Number(jumlahLampiran) === 0;
+
+                            if (isEmptyLampiran) {
+                              if (form.getFieldValue("surat.ket_lampiran")) {
+                                form.setFieldValue("surat.ket_lampiran", "");
+                              }
+
+                              if (form.getFieldValue("lampiran")?.length) {
+                                form.setFieldValue("lampiran", []);
+                              }
+                            }
+
+                            return !isEmptyLampiran ? (
                               <>
                                 <form.Field name="surat.ket_lampiran">
                                   {(field) => (
@@ -276,11 +292,7 @@ export function SuratForm({ mode, type, initialData, onSubmit }: Props) {
                                       field={field}
                                       accept="application/pdf,.xlsx,image/png,image/jpeg"
                                       disabled={
-                                        Number(
-                                          form.getFieldValue(
-                                            "surat.jumlahLampiran",
-                                          ) ?? 0,
-                                        ) <= 0
+                                        Number(jumlahLampiran ?? 0) <= 0
                                       }
                                     />
                                   )}
@@ -352,6 +364,7 @@ export function SuratForm({ mode, type, initialData, onSubmit }: Props) {
                             options={[]}
                             queryKey={["klasifikasi-options"]}
                             queryFn={getKlasifikasiOptions}
+                            mapData={(data) => data}
                             placeholder="Cari klasifikasi..."
                           />
                         )}

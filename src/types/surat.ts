@@ -7,12 +7,13 @@ export interface Penerima {
 }
 
 export interface TandaTangan {
-  Xidttd: string;
+  Xidttd: string | null;
   label?: string;
   jabatan: string;
 }
 
 export interface Surat {
+  xNo_srt: string;
   xKota: string;
   xNo_thn: Date | undefined;
 
@@ -52,8 +53,18 @@ export interface SuratFormData {
 
 export interface SaveSuratResult {
   IDsurat: number;
+  kode?: string;
+  ket?: string;
   no_surat: string;
 }
+
+export type SubmitResponse = {
+  success: boolean;
+  data?: {
+    kode?: string;
+    ket?: string;
+  };
+};
 
 export type SuratType = "internal" | "eksternal";
 export type SuratMode = "create" | "edit";

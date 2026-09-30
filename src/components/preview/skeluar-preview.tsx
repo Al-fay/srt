@@ -30,7 +30,7 @@ const contentStyle: React.CSSProperties = {
   wordBreak: "break-word",
 };
 
-function DocumentFooter({
+export function DocumentFooter({
   jnsKlasifikasi,
   xTg_share,
   lokasi,
@@ -38,7 +38,7 @@ function DocumentFooter({
 }: {
   jnsKlasifikasi: string;
   xTg_share?: Date | string | null;
-  lokasi: Lokasi | null;
+  lokasi?: Lokasi | null;
   footerRef?: (el: HTMLDivElement | null) => void;
 }) {
   return (
@@ -196,6 +196,7 @@ export function SuratKeluarPreview({
   ];
 
   const nomorSurat = [
+    surat?.xNo_srt,
     surat?.xNo_bag,
     surat?.xNo_kode,
     "Kspps.Js",
@@ -255,7 +256,7 @@ export function SuratKeluarPreview({
                     <img
                       src="/kospinjasa.svg"
                       alt="KSPPS Kospin Jasa Syariah"
-                      className="h-16 object-contain"
+                      className="w-[55mm] h-[25mm] object-contain"
                     />
                   </div>
 
@@ -295,7 +296,7 @@ export function SuratKeluarPreview({
                   </div>
 
                   <div className="mb-6 flex justify-end">
-                    <div className="flex w-[60mm] flex-col">
+                    <div className="flex w-[90mm] flex-col">
                       <p className="text-left">Kepada, Yth.</p>
 
                       {kepada.length === 0 ? (

@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import type { AnyFieldApi } from "@tanstack/react-form";
 import { CKEditor } from "ckeditor4-react";
 import { getErrorMessage } from "@/lib/form-errors";
+import { api } from "@/lib/api";
 import { FieldError } from "../ui/field";
 import { API_URL } from "@/lib/env";
 
@@ -69,6 +70,7 @@ export function EditorField({ field }: Props) {
 
       for (let i = 0; i < images.count(); i++) {
         const image = images.getItem(i);
+
         const src =
           image.getAttribute("src") || image.getAttribute("data-cke-saved-src");
 
@@ -95,24 +97,17 @@ export function EditorField({ field }: Props) {
     deletedImagesRef.current.add(image.path);
 
     try {
-      const response = await fetch(`${API_URL}/surat/delete`, {
+      await api("/surat/delete", {
         method: "DELETE",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({
           path: image.path,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`Gagal menghapus gambar (${response.status})`);
-      }
-
       uploadedImagesRef.current.delete(image.url);
     } catch (error) {
       deletedImagesRef.current.delete(image.path);
+
       console.error("Gagal menghapus gambar:", error);
     }
   };
@@ -171,13 +166,31 @@ export function EditorField({ field }: Props) {
           config={{
             height: 300,
             versionCheck: false,
-            extraPlugins: "justify,tableresize,uploadimage",
+
+            find_highlight: {
+              element: "span",
+              styles: {
+                "background-color": "#ffff00",
+                color: "#000000",
+              },
+            },
+
+            colorButton_colors:
+              "CF5D4E,454545,FFF,DDD,CCEAEE,66AB16,2a0246,dd3d38,e432cc,3532e4,32cfe4,e4326d,ffe600,00aeff,6200ff,48ff00,0099ff,001aff",
+
+            extraPlugins:
+              "justify,tableresize,uploadimage,find,colorbutton,specialchar",
+
             uploadUrl: `${API_URL}/surat/figure`,
             imageUploadUrl: `${API_URL}/surat/figure`,
             filebrowserImageUploadUrl: `${API_URL}/surat/figure`,
+
             placeholder: "Masukkan isi surat...",
+
             contentsCss: "/ckeditor4/ckeditor-content.css",
+
             format_tags: "p;h1;h2;h3;h4;h5;h6",
+
             toolbar: [
               {
                 name: "format",
@@ -185,7 +198,7 @@ export function EditorField({ field }: Props) {
               },
               {
                 name: "styles",
-                items: ["Format", "Font", "FontSize"],
+                items: ["Format", "Font", "FontSize", "colorButton"],
               },
               {
                 name: "basicstyles",
@@ -214,7 +227,7 @@ export function EditorField({ field }: Props) {
                   "BulletedList",
                   "Outdent",
                   "Indent",
-                  "Blockquote",
+                  "SpecialChar",
                 ],
               },
               {
@@ -227,16 +240,22 @@ export function EditorField({ field }: Props) {
               },
               {
                 name: "document",
-                items: ["RemoveFormat"],
+                items: ["RemoveFormat", "CopyFormatting"],
+              },
+              {
+                name: "Find",
+                items: ["Find", "Replace"],
               },
               {
                 name: "tools",
                 items: ["Maximize", "Source"],
               },
             ],
+
             table_defaultAttributes: {
               border: "1",
             },
+
             enterMode: 1,
             shiftEnterMode: 2,
             pasteFromWordRemoveFontStyles: false,
@@ -245,6 +264,7 @@ export function EditorField({ field }: Props) {
             resize_enabled: true,
             language: "en",
           }}
+
           onInstanceReady={(event) => {
             const editor = event.editor;
 
@@ -256,9 +276,11 @@ export function EditorField({ field }: Props) {
               scheduleCleanup(editor);
             });
           }}
+
           onChange={(event) => {
             field.handleChange(event.editor.getData() ?? "");
           }}
+
           onFileUploadRequest={(event: any) => {
             const fileLoader = event.data.fileLoader;
             const xhr = fileLoader.xhr;
@@ -278,6 +300,7 @@ export function EditorField({ field }: Props) {
 
             event.stop();
           }}
+
           onFileUploadResponse={(event: any) => {
             const fileLoader = event.data.fileLoader;
             const xhr = fileLoader.xhr;
@@ -302,6 +325,7 @@ export function EditorField({ field }: Props) {
               });
 
               event.data.url = url;
+
               event.data.fileName =
                 file.fileName || file.originalName || "image";
             } catch (error) {

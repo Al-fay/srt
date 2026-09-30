@@ -176,16 +176,16 @@ export function buildSignatureHtml(ttd: any[]): string {
 
       if (ttd.length === 1) {
         return `
-          <div class="text-center w-[73mm] min-w-[73mm]">
-            <p class="mb-16 ml-[40px] text-left">
+          <div class="text-center w-[95mm] min-w-[95mm]">
+            <p class="mb-16 mr-[5mm] text-left">
               KSPPS Kospin JASA Syariah
             </p>
 
-            <p class="ml-[40px] font-bold underline text-left">
+            <p class="mr-[15mm] font-bold underline text-left">
               ${label}
             </p>
 
-            <span class="ml-[-40px] text-xs text-left">
+            <span class="ml-[-65mm] text-xs text-left">
               ${jabatan}
             </span>
           </div>
@@ -541,10 +541,9 @@ export function getPageHeight() {
   const mmToPx =
     root.getBoundingClientRect().width > 0 ? 96 / 25.4 : 3.779527559;
 
-  const a4Height = 297 * mmToPx;
+  const pageHeightMm = 279.4;
 
   const topPadding = 20 * mmToPx;
-
   const bottomPadding = 5 * mmToPx;
 
   const footerImage = document.querySelector(
@@ -561,7 +560,7 @@ export function getPageHeight() {
     footerTextEl?.getBoundingClientRect().height || 35;
 
   return (
-    a4Height -
+    pageHeightMm * mmToPx -
     topPadding -
     bottomPadding -
     footerImageHeight -

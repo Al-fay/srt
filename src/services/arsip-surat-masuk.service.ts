@@ -46,6 +46,7 @@ export async function getArsipSuratMasuk(
   }
 
   const res = await api<GetArsipSuratMasukResponse>("/surat-masuk", {
+    method: "POST",
     params: queryParams,
   });
 

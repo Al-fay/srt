@@ -1,4 +1,4 @@
-import type { MemoFormData } from "@/types/memo"
+import type { MemoFormData } from "@/types/memo";
 
 export const defaultMemo: MemoFormData = {
   kantor: "",
@@ -13,5 +13,6 @@ export const defaultMemo: MemoFormData = {
   perihal: "",
   isi: "",
   klasifikasi: "",
+  xTg_share: undefined,
   lampiran: [],
-}
+};

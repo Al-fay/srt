@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { ComboboxSimple } from "@/components/form/combobox-simple";
 import type { TandaTangan } from "@/types/surat";
 import { FieldError } from "../ui/field";
-import { API_URL } from "@/lib/env";
+import { api } from "@/lib/api";
 
 type Props = {
   field: AnyFieldApi;
@@ -20,6 +20,15 @@ export type ComboboxOptionTTD = {
   value: string;
   label: string;
   jabatan?: string;
+  originalValue?: string | null;
+};
+
+type TtdResponse = {
+  data: {
+    value: string | null;
+    label: string;
+    jabatan: string;
+  }[];
 };
 
 export function TtdField({
@@ -30,7 +39,6 @@ export function TtdField({
   maxRow = 1,
 }: Props) {
   const rows = (field.state.value as TandaTangan[]) ?? [];
-  const BASE_URL = `${API_URL}/surat/ttd`;
   const MIN_ROW = 1;
 
   const addRow = () => {
@@ -39,8 +47,10 @@ export function TtdField({
     field.handleChange([
       ...rows,
       {
+        Xidttd: "",
         nip: "",
         jabatan: "",
+        label: "",
       },
     ]);
   };
@@ -58,16 +68,11 @@ export function TtdField({
   };
 
   const fetchTTD = async (): Promise<ComboboxOptionTTD[]> => {
-    const res = await fetch(`${BASE_URL}`, { credentials: "include" });
+    const response = await api<TtdResponse>("/surat/ttd");
 
-    if (!res.ok) {
-      throw new Error("Gagal mengambil data");
-    }
-
-    const json = await res.json();
-
-    return json.data.map((item: ComboboxOptionTTD) => ({
-      value: String(item.value),
+    return (response.data ?? []).map((item) => ({
+      value: item.label,
+      originalValue: item.value,
       label: item.label,
       jabatan: item.jabatan,
     }));
@@ -99,19 +104,21 @@ export function TtdField({
             jabatan?: string[];
           }) ?? {};
 
+        const selectedValue = row.label ?? "";
+
         return (
           <div key={index} className="space-y-2">
             <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_1fr_40px]">
               <div>
                 <ComboboxSimple
-                  value={row.Xidttd}
-                  onChange={(value, option) => {
+                  value={selectedValue}
+                  onChange={(_, option) => {
                     const selected = option as ComboboxOptionTTD | undefined;
 
                     updateRow(index, {
-                      Xidttd: value,
-                      label: value ? (selected?.label ?? "") : "",
-                      jabatan: value ? (selected?.jabatan ?? "") : "",
+                      Xidttd: selected?.originalValue ?? null,
+                      label: selected?.label ?? "",
+                      jabatan: selected?.jabatan ?? "",
                     });
                   }}
                   queryKey={["Xidttd"]}
@@ -127,7 +134,7 @@ export function TtdField({
               <div>
                 <Input
                   placeholder="Nama Jabatan"
-                  value={row.jabatan}
+                  value={row.jabatan ?? ""}
                   onChange={(e) =>
                     updateRow(index, {
                       jabatan: e.target.value,

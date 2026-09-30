@@ -18,7 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-// import { API_URL } from "@/lib/env"
+import { api } from "@/lib/api";
 import { usePageTitle } from "@/lib/use-page-title";
 import {
   getOtorisasi,
@@ -28,8 +28,14 @@ import {
 import type { AllDataOtorisasi } from "@/types/otorisasi";
 import { createFileRoute } from "@tanstack/react-router";
 import { createColumnHelper } from "@tanstack/react-table";
-import { CheckCircle, InfoIcon, MoreVerticalIcon } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import {
+  CheckCircle,
+  Download,
+  FileIcon,
+  InfoIcon,
+  MoreVerticalIcon,
+} from "lucide-react";
+import { Fragment, useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/list-oto-surat/")({
@@ -42,31 +48,6 @@ function RouteComponent() {
   usePageTitle("Daftar Otorisasi Surat");
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // const handleViewLampiran = async (lampiran: string) => {
-  //   try {
-  //     const response = await fetch(`${API_URL}/surat/files/${lampiran}`, {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       credentials: "include",
-  //     })
-
-  //     if (!response.ok) {
-  //       throw new Error("Gagal mengambil lampiran")
-  //     }
-
-  //     const blob = await response.blob()
-  //     const url = URL.createObjectURL(blob)
-
-  //     window.open(url, "_blank")
-
-  //     setTimeout(() => URL.revokeObjectURL(url), 10000)
-  //   } catch (error: any) {
-  //     toast.error(error)
-  //   }
-  // }
-
   const columns = useMemo(
     () => [
       columnHelper.display({
@@ -74,7 +55,27 @@ function RouteComponent() {
         header: "Aksi",
         cell: ({ row }) => {
           const surat = row.original;
+          const nomorSurat = surat.no_surat;
+          const hal = surat.perihal;
           const [openVerifikasi, setOpenVerifikasi] = useState(false);
+
+          const attachmentFiles = (surat.lampiran ?? []).flatMap((item) =>
+            item.lampiran
+              ? item.lampiran
+                  .split(",")
+                  .map((file) => file.trim())
+                  .filter(Boolean)
+              : [],
+          );
+
+          const getFileUrl = (filePath: string) => {
+            const normalizedPath = filePath.replace(/^\/+/, "");
+
+            return `/surat/files/${normalizedPath
+              .split("/")
+              .map(encodeURIComponent)
+              .join("/")}`;
+          };
 
           const handleVerifikasi = async () => {
             try {
@@ -113,6 +114,144 @@ function RouteComponent() {
             }
           };
 
+          const handlePreviewNoLabel = async () => {
+            try {
+              const xid_surat = Number(surat.id_surat);
+
+              if (Number.isNaN(xid_surat)) {
+                toast.error("Surat tidak valid");
+                return;
+              }
+
+              const data = await getPreviewSuratOto(xid_surat, true);
+
+              const url = URL.createObjectURL(data);
+
+              window.open(url, "_blank", "noopener,noreferrer");
+
+              setTimeout(() => {
+                URL.revokeObjectURL(url);
+              }, 1000);
+            } catch (err: any) {
+              console.error("Preview error:", err);
+              toast.error(err?.message ?? "Gagal ambil data");
+            }
+          };
+
+          const handleDownload = async () => {
+            try {
+              const xid_surat = Number(surat.id_surat);
+
+              if (Number.isNaN(xid_surat)) {
+                toast.error("Surat tidak valid");
+                return;
+              }
+
+              const data = await getPreviewSuratOto(xid_surat);
+
+              const url = URL.createObjectURL(data);
+
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = `surat-${hal}-${nomorSurat}-${new Date()
+                .toISOString()
+                .slice(0, 10)}.pdf`;
+
+              document.body.appendChild(link);
+              link.click();
+              link.remove();
+
+              URL.revokeObjectURL(url);
+            } catch (err: any) {
+              console.error("Download error:", err);
+              toast.error(err?.message ?? "Gagal ambil data");
+            }
+          };
+
+          const handleDownloadNoLabel = async () => {
+            try {
+              const xid_surat = Number(surat.id_surat);
+
+              if (Number.isNaN(xid_surat)) {
+                toast.error("Surat tidak valid");
+                return;
+              }
+
+              const data = await getPreviewSuratOto(xid_surat, true);
+
+              const url = URL.createObjectURL(data);
+
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = `surat-keluar-${nomorSurat}-${hal}-${new Date()
+                .toISOString()
+                .slice(0, 10)}.pdf`;
+
+              document.body.appendChild(link);
+              link.click();
+              link.remove();
+
+              setTimeout(() => {
+                URL.revokeObjectURL(url);
+              }, 1000);
+            } catch (err: any) {
+              toast.error(err?.message ?? "Gagal ambil data");
+            }
+          };
+
+          const handleAttachment = async (filePath: string) => {
+            try {
+              const fileUrl = getFileUrl(filePath);
+
+              const blob = await api<Blob>(fileUrl, {
+                method: "GET",
+                responseType: "blob",
+              });
+
+              const url = URL.createObjectURL(blob);
+              window.open(url, "_blank", "noopener,noreferrer");
+
+              setTimeout(() => {
+                URL.revokeObjectURL(url);
+              }, 1000);
+            } catch (err: any) {
+              console.error("Preview attachment error:", err);
+              toast.error(err?.message ?? "Gagal mengambil lampiran");
+            }
+          };
+
+          const handleAttachmentDownload = async (
+            filePath: string,
+            index: number,
+          ) => {
+            try {
+              const fileUrl = getFileUrl(filePath);
+
+              const blob = await api<Blob>(fileUrl, {
+                method: "GET",
+                responseType: "blob",
+              });
+
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+
+              link.href = url;
+              link.download =
+                filePath.split("/").pop() || `lampiran-${index + 1}`;
+
+              document.body.appendChild(link);
+              link.click();
+              link.remove();
+
+              setTimeout(() => {
+                URL.revokeObjectURL(url);
+              }, 1000);
+            } catch (err: any) {
+              console.error("Download attachment error:", err);
+              toast.error(err?.message ?? "Gagal mengunduh lampiran");
+            }
+          };
+
           return (
             <>
               <DropdownMenu>
@@ -144,6 +283,41 @@ function RouteComponent() {
                       <InfoIcon className="mr-2 h-4 w-4" />
                       Preview
                     </DropdownMenuItem>
+
+                    <DropdownMenuItem onSelect={handlePreviewNoLabel}>
+                      <InfoIcon className="mr-2 h-4 w-4" />
+                      <span>Preview Blank</span>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem onSelect={handleDownload}>
+                      <Download className="mr-2 h-4 w-4" />
+                      <span>Unduh</span>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem onSelect={handleDownloadNoLabel}>
+                      <Download className="mr-2 h-4 w-4" />
+                      <span>Unduh Blank</span>
+                    </DropdownMenuItem>
+
+                    {attachmentFiles.map((filePath, index) => (
+                      <Fragment key={`${filePath}-${index}`}>
+                        <DropdownMenuItem
+                          onSelect={() => handleAttachment(filePath)}
+                        >
+                          <FileIcon className="mr-2 h-4 w-4" />
+                          <span>Lampiran {index + 1}</span>
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem
+                          onSelect={() =>
+                            handleAttachmentDownload(filePath, index)
+                          }
+                        >
+                          <Download className="mr-2 h-4 w-4" />
+                          <span>Unduh Lampiran {index + 1}</span>
+                        </DropdownMenuItem>
+                      </Fragment>
+                    ))}
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>

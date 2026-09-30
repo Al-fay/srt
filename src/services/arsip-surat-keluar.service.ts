@@ -1,6 +1,4 @@
 import { api } from "@/lib/api";
-import { API_URL } from "@/lib/env";
-import type ApiResponse from "@/types/api";
 import type {
   GetArsipSuratKeluarParams,
   GetArsipSuratKeluarResponse,
@@ -48,44 +46,22 @@ export async function getArsipSuratKeluar(
   }
 
   const res = await api<GetArsipSuratKeluarResponse>("/surat-keluar", {
+    method: "POST",
     params: queryParams,
   });
 
   return res;
 }
 
-export async function getArsipSuratKeluarReport(xid_surat: number) {
-  const response = await fetch(`${API_URL}/surat-keluar/${xid_surat}`, {
+export async function getArsipSuratKeluarReport(
+  xid_surat: number,
+  dif?: boolean,
+) {
+  return api<Blob>(`/surat-keluar/${xid_surat}?dif=${dif ? "true" : "false"}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include",
+    responseType: "blob",
   });
-
-  const contentType = response.headers.get("content-type") ?? "";
-
-  if (!response.ok) {
-    let body: any = null;
-
-    if (contentType.includes("application/json")) {
-      body = await response.json();
-    } else {
-      body = await response.text();
-    }
-
-    const error = new Error(
-      body?.error?.message ?? body?.message ?? "Terjadi kesalahan",
-    ) as Error & {
-      code?: string;
-      response?: ApiResponse<never>;
-    };
-
-    error.code = body?.error?.code;
-    error.response = body;
-
-    throw error;
-  }
-
-  return response.blob();
 }

@@ -63,10 +63,10 @@ const suratTugasMenu = [
   { title: "Surat Tugas (Driver)", url: "/surat-tugas/driver" },
 ];
 
-const suratKeluarMenu = [
-  { title: "Internal KSPPS", url: "/surat-keluar/internal/create" },
-  { title: "Eksternal KSPPS", url: "/surat-keluar/eksternal/create" },
-];
+// const suratKeluarMenu = [
+//   { title: "Internal KSPPS", url: "/surat-keluar/internal/create" },
+//   { title: "Eksternal KSPPS", url: "/surat-keluar/eksternal/create" },
+// ];
 
 const suratSKMenu = [
   { title: "SK Non Produk", url: "/surat-sk/non-produk" },
@@ -74,6 +74,8 @@ const suratSKMenu = [
 ];
 
 const adminMenu = [
+  { title: "Daftar Bagian", url: "/admin/sbagian" },
+  { title: "Daftar Bagian Grup", url: "/admin/bagian" },
   { title: "Daftar User", url: "/admin/user" },
   { title: "Display", url: "/admin/display" },
 ];
@@ -209,7 +211,24 @@ export default function AppSidebar() {
 
                 <CollapsibleContent>
                   <SidebarMenu className="ml-5">
-                    <Collapsible
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        asChild
+                        className="transition-all duration-200 hover:bg-slate-100 hover:text-indigo-600 dark:hover:bg-slate-900 dark:hover:text-indigo-400"
+                      >
+                        <Link
+                          to="/surat-keluar/internal/create"
+                          activeProps={{
+                            className:
+                              "bg-gradient-to-r from-indigo-50 to-violet-50 text-indigo-700 font-semibold shadow-sm ring-1 ring-indigo-100 dark:from-indigo-950/50 dark:to-violet-950/50 dark:text-indigo-300 dark:ring-indigo-900/50",
+                          }}
+                        >
+                          <Inbox />
+                          <span>Surat Keluar</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    {/* <Collapsible
                       open={openState[KEY.keluar] ?? false}
                       onOpenChange={(val) =>
                         setOpenState((prev) => ({
@@ -250,7 +269,7 @@ export default function AppSidebar() {
                           </SidebarMenu>
                         </CollapsibleContent>
                       </SidebarMenuItem>
-                    </Collapsible>
+                    </Collapsible> */}
 
                     <Collapsible
                       open={openState[KEY.tugas] ?? false}
@@ -362,7 +381,7 @@ export default function AppSidebar() {
                         className="transition-all duration-200 hover:bg-slate-100 hover:text-indigo-600 dark:hover:bg-slate-900 dark:hover:text-indigo-400"
                       >
                         <Link
-                          to="/pengumuman-libur"
+                          to="/pengumuman-libur/create"
                           activeProps={{
                             className:
                               "bg-gradient-to-r from-indigo-50 to-violet-50 text-indigo-700 font-semibold shadow-sm ring-1 ring-indigo-100 dark:from-indigo-950/50 dark:to-violet-950/50 dark:text-indigo-300 dark:ring-indigo-900/50",
@@ -380,7 +399,7 @@ export default function AppSidebar() {
                         className="transition-all duration-200 hover:bg-slate-100 hover:text-indigo-600 dark:hover:bg-slate-900 dark:hover:text-indigo-400"
                       >
                         <Link
-                          to="/memo"
+                          to="/memo/create"
                           activeProps={{
                             className:
                               "bg-gradient-to-r from-indigo-50 to-violet-50 text-indigo-700 font-semibold shadow-sm ring-1 ring-indigo-100 dark:from-indigo-950/50 dark:to-violet-950/50 dark:text-indigo-300 dark:ring-indigo-900/50",

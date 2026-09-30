@@ -54,6 +54,7 @@ export async function createSuratInternal(value: SuratFormData) {
 
   const payload = encrypt({
     surat: {
+      xNo_srt: value.surat.xNo_srt,
       xNo_bag: value.surat.xNo_bag,
       xNo_kode: value.surat.xNo_kode,
       xNo_bln: value.surat.xNo_bln,
@@ -106,7 +107,7 @@ export async function createSuratInternal(value: SuratFormData) {
     ],
   });
 
-  console.log("ini payload surat : ", payload);
+  // console.log("ini payload surat : ", payload);
 
   const suratResult = await api<ApiResponse<SaveSuratResult>>("/surat", {
     method: "POST",
@@ -115,6 +116,14 @@ export async function createSuratInternal(value: SuratFormData) {
       "Content-Type": "application/json",
     },
   });
+
+  if (suratResult.data.kode === "xx") {
+    const message =
+      suratResult.data.ket ??
+      "Nomor surat sudah terdaftar, silakan gunakan nomor lain";
+
+    throw new Error(message);
+  }
 
   const xid_surat = suratResult.data.IDsurat;
 

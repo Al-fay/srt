@@ -1,7 +1,6 @@
 import type { DataTableQueryParams } from "@/components/data-table";
 import { api } from "@/lib/api";
 import { encrypt } from "@/lib/crypto";
-import { API_URL } from "@/lib/env";
 import type ApiResponse from "@/types/api";
 import type { GetOtorisasisResponse } from "@/types/otorisasi";
 
@@ -36,18 +35,17 @@ export async function getOtorisasi(
   }
 
   if (params?.filters) {
-    Object.entries(params.filters).forEach(([k, v]) => {
-      if (v) {
-        queryParams[k] = v;
+    Object.entries(params.filters).forEach(([key, value]) => {
+      if (value) {
+        queryParams[key] = value;
       }
     });
   }
 
-  const res = await api<GetOtorisasisResponse>("/otorisasi", {
+  return api<GetOtorisasisResponse>("/otorisasi", {
+    method: "POST",
     params: queryParams,
   });
-
-  return res;
 }
 
 export async function saveOtorisasi(
@@ -60,8 +58,6 @@ export async function saveOtorisasi(
     },
   ]);
 
-  // console.log("Payload:", payload)
-
   return api<ApiResponse>("/otorisasi", {
     method: "PATCH",
     body: JSON.stringify({ payload }),
@@ -71,74 +67,28 @@ export async function saveOtorisasi(
   });
 }
 
-export async function getPreviewSuratOto(xid_surat: number) {
-  const response = await fetch(`${API_URL}/otorisasi/${xid_surat}`, {
-    method: "GET",
+export async function getPreviewSuratOto(
+  xid_surat: number,
+  dif?: boolean,
+): Promise<Blob> {
+  return api<Blob>(`/otorisasi/${xid_surat}?dif=${dif ? "true" : "false"}`, {
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include",
+    responseType: "blob",
   });
-
-  const contentType = response.headers.get("content-type") ?? "";
-
-  if (!response.ok) {
-    let body: any = null;
-
-    if (contentType.includes("application/json")) {
-      body = await response.json();
-    } else {
-      body = await response.text();
-    }
-
-    const error = new Error(
-      body?.error?.message ?? body?.message ?? "Terjadi kesalahan",
-    ) as Error & {
-      code?: string;
-      response?: ApiResponse<never>;
-    };
-
-    error.code = body?.error?.code;
-    error.response = body;
-
-    throw error;
-  }
-
-  return response.blob();
 }
 
-export async function getPreviewSuratMasuk(xid_surat: number) {
-  const response = await fetch(`${API_URL}/otorisasi/sm/${xid_surat}`, {
-    method: "GET",
+export async function getPreviewSuratMasuk(
+  xid_surat: number,
+  dif?: boolean,
+): Promise<Blob> {
+  return api<Blob>(`/otorisasi/sm/${xid_surat}?dif=${dif ? "true" : "false"}`, {
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include",
+    responseType: "blob",
   });
-
-  const contentType = response.headers.get("content-type") ?? "";
-
-  if (!response.ok) {
-    let body: any = null;
-
-    if (contentType.includes("application/json")) {
-      body = await response.json();
-    } else {
-      body = await response.text();
-    }
-
-    const error = new Error(
-      body?.error?.message ?? body?.message ?? "Terjadi kesalahan",
-    ) as Error & {
-      code?: string;
-      response?: ApiResponse<never>;
-    };
-
-    error.code = body?.error?.code;
-    error.response = body;
-
-    throw error;
-  }
-
-  return response.blob();
 }

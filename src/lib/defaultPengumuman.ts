@@ -1,12 +1,19 @@
-import type { PengumumanLiburFormData } from "@/types/libur"
+import type { PengumumanLiburFormData } from "@/types/libur";
 
 export const defaultPengumuman: PengumumanLiburFormData = {
-  tanggal: new Date(),
+  xNo_thn: new Date(),
   nomor: "",
-  bagian: "",
-  kode: "",
-  bulan: "",
+  xNo_bag: "",
+  xNo_kode: "",
+  xNo_bln: "",
   tglLibur: [],
   buka: new Date(),
-  ttd: [{ nip: "", jabatan: "" }],
-}
+  ttd: [
+    {
+      Xidttd: "",
+      jabatan: "",
+    },
+  ],
+  klasifikasi: "",
+  xTg_share: undefined,
+};

@@ -2,6 +2,7 @@ import type { SuratFormData } from "@/types/surat";
 
 export const defaultSurat: SuratFormData = {
   surat: {
+    xNo_srt: "",
     xKota: "",
     xNo_thn: new Date(),
 

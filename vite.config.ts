@@ -12,12 +12,22 @@ export default defineConfig({
     }),
     react(),
   ],
+  // base: "/surat/",
   build: {
     target: ["chrome80", "firefox99", "edge80", "safari14"],
   },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  server: {
+    proxy: {
+      "/files": {
+        target: "http://localhost:3010",
+        changeOrigin: true,
+        rewrite: (path) => `/api/surat${path}`,
+      },
     },
   },
 });
